@@ -45,12 +45,20 @@ const app = express();
 
 const cors = require("cors");
 
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://campus-placement-frontend-theta.vercel.app"
-    ],
+    origin: function (origin, callback) {
+      if (
+        !origin ||
+        origin === "http://localhost:5173" ||
+        origin.endsWith(".vercel.app")
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
